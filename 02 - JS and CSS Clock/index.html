@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS + CSS Clock</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+  <div class="clock">
+    <div class="clock-face">
+      <div class="hand hour-hand"></div>
+      <div class="hand min-hand"></div>
+      <div class="hand second-hand"></div>
+      <!-- Add numbers and minute index lines -->
+      <div class="numbers">
+        <div class="number">1</div>
+        <div class="number">2</div>
+        <div class="number">3</div>
+        <div class="number">4</div>
+        <div class="number">5</div>
+        <div class="number">6</div>
+        <div class="number">7</div>
+        <div class="number">8</div>
+        <div class="number">9</div>
+        <div class="number">10</div>
+        <div class="number">11</div>
+        <div class="number">12</div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <style>
+    html {
+      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px);
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      /* background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); */
+      position: absolute;
+      top: 50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+    }
+
+    .hour-hand {
+      height: 8px;
+      background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+    }
+
+    .min-hand {
+      height: 7px;
+      background: linear-gradient(to right, blue, indigo, red, orange);
+    }
+
+    .second-hand {
+      height: 5px;
+      background: linear-gradient(to right, green, yellow, blue, indigo);
+    }
+
+    .numbers {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .number {
+      position: absolute;
+      font-size: 3rem;
+      color: rgb(0, 0, 132);
+      width: 30.5rem;
+      /* Adjust as needed */
+      height: 31rem;
+      /* Adjust as needed */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-origin: center;
+    }
+
+    .number:nth-child(1) {
+      transform: rotate(30deg) translate(0, -50%) rotate(-30deg);
+    }
+
+    .number:nth-child(2) {
+      transform: rotate(60deg) translate(0, -50%) rotate(-60deg);
+    }
+
+    .number:nth-child(3) {
+      transform: rotate(90deg) translate(0, -50%) rotate(-90deg);
+    }
+
+    .number:nth-child(4) {
+      transform: rotate(120deg) translate(0, -50%) rotate(-120deg);
+    }
+
+    .number:nth-child(5) {
+      transform: rotate(150deg) translate(0, -50%) rotate(-150deg);
+    }
+
+    .number:nth-child(6) {
+      transform: rotate(180deg) translate(0, -50%) rotate(-180deg);
+    }
+
+    .number:nth-child(7) {
+      transform: rotate(210deg) translate(0, -50%) rotate(-210deg);
+    }
+
+    .number:nth-child(8) {
+      transform: rotate(240deg) translate(0, -50%) rotate(-240deg);
+    }
+
+    .number:nth-child(9) {
+      transform: rotate(270deg) translate(0, -50%) rotate(-270deg);
+    }
+
+    .number:nth-child(10) {
+      transform: rotate(300deg) translate(0, -50%) rotate(-300deg);
+    }
+
+    .number:nth-child(11) {
+      transform: rotate(330deg) translate(0, -50%) rotate(-330deg);
+    }
+
+    .number:nth-child(12) {
+      transform: rotate(360deg) translate(0, -50%) rotate(-360deg);
+    }
+  </style>
+
+  <script>
+    // Select the clock hands from the DOM
+    const secondHand = document.querySelector('.second-hand');
+    const minHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
+
+    // Function to set the date and rotate the clock hands accordingly
+    function setDate() {
+      const now = new Date(); // Get the current date and time
+
+      // Get the current seconds, minutes, and hours
+      const getSeconds = now.getSeconds();
+      const getMinutes = now.getMinutes();
+      const getHours = now.getHours();
+
+      // Calculate the degrees for the second hand
+      const secondsDegrees = ((getSeconds / 60) * 360) + 90;
+      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+      // Calculate the degrees for the minute hand
+      const minsDegrees = ((getMinutes / 60) * 360) + ((getSeconds / 60) * 6) + 90;
+      minHand.style.transform = `rotate(${minsDegrees}deg)`;
+
+      // Calculate the degrees for the hour hand
+      const hoursDegrees = ((getHours / 12) * 360) + ((getMinutes / 60) * 30) + 90;
+      hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+
+      // Remove transition at the start of each minute to avoid glitch
+      if (getSeconds === 0) {
+        secondHand.style.transition = 'none';
+        minHand.style.transition = 'none';
+        hourHand.style.transition = 'none';
+      } else {
+        secondHand.style.transition = '';
+        minHand.style.transition = '';
+        hourHand.style.transition = '';
+      }
+    }
+
+    // Update the clock every second
+    setInterval(setDate, 1000);
+
+  </script>
+</body>
+
+</html>

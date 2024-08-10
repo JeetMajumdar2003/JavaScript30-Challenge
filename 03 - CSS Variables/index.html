@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scoped CSS Variables and JS</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+
+</head>
+
+<body class="dark-mode">
+  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
+
+  <div class="controls">
+    <label for="spacing">Spacing:</label>
+    <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+
+    <label for="blur">Blur:</label>
+    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+
+    <label for="border">Border:</label>
+    <input id="border" type="range" name="border-radius" min="10" max="200" value="10" data-sizing="px">
+
+    <label for="shadow">Shadow:</label>
+    <input id="shadow" type="range" name="shadow" min="10" max="50" value="10" data-sizing="px">
+    
+    <label for="base">Base Color:</label>
+    <input id="base" type="color" name="base" value="#ffc600">
+
+    <button type="reset" id="reset">Reset</button>
+
+    <label for="mode" class="switch">
+      <input id="mode" type="checkbox" title="Toggle dark mode">
+      <span class="slider round"></span>
+    </label>
+  </div>
+
+  <div class="preview-box"></div>
+  <img src="https://unsplash.it/600/400?image=881&blur=5" alt="img">
+
+  <!-- CSS -->
+  <style>
+    :root {
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+      --border-radius: 10px;
+      --shadow: 10px;
+    }
+
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+      border-radius: var(--border-radius);
+      box-shadow: 0 0 var(--shadow) var(--base);
+    }
+
+    .hl {
+      color: var(--base);
+    }
+
+    body {
+      text-align: center;
+      background: #193549;
+      color: white;
+      font-family: 'helvetica neue', sans-serif;
+      font-weight: 100;
+      font-size: 30px;
+    }
+
+    .controls {
+      margin-bottom: 50px;
+    }
+
+    input {
+      width: 100px;
+    }
+
+    button {
+      background: red;
+      color: black;
+      border: none;
+      border-radius: 10px;
+      padding: 5px 10px;
+      margin: 10px;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .preview-box {
+      width: 200px;
+      height: 200px;
+      background: var(--base);
+      padding: var(--spacing);
+      filter: blur(var(--blur));
+      border-radius: var(--border-radius);
+      box-shadow: 0 0 var(--shadow) var(--base);
+      margin: 20px auto;
+      
+    }
+
+    /* Dark/Light mode */
+    body.light-mode {
+      background: #ffffff;
+      color: black;
+    }
+
+    body.dark-mode {
+      background: #193549;
+      color: white;
+    }
+
+    /* The switch - the box around the slider */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    /* The slider */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+  </style>
+
+  <script>
+    // Select all inputs and reset button
+    const inputs = document.querySelectorAll('.controls input');
+    const resetButton = document.getElementById('reset');
+    const modeToggle = document.getElementById('mode');
+
+    // handleUpdate function to update CSS variables
+    function handleUpdate() {
+      const suffix = this.dataset.sizing || '';
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+    }
+
+    // Reset all inputs to default values
+    function resetInputs() {
+      inputs.forEach(input => {
+        const defaultValue = input.defaultValue;
+        input.value = defaultValue;
+        const suffix = input.dataset.sizing || '';
+        document.documentElement.style.setProperty(`--${input.name}`, defaultValue + suffix);
+      });
+    }
+    // Save settings to localStorage
+    function saveSettings() {
+      inputs.forEach(input => {
+        localStorage.setItem(input.name, input.value);
+      });
+    }
+    // Load settings from localStorage
+    function loadSettings() {
+      inputs.forEach(input => {
+        const savedValue = localStorage.getItem(input.name);
+        if (savedValue !== null) {
+          input.value = savedValue;
+          const suffix = input.dataset.sizing || '';
+          document.documentElement.style.setProperty(`--${input.name}`, savedValue + suffix);
+        }
+      });
+    }
+    // Toggle dark/light mode
+    function toggleMode() {
+      if (modeToggle.checked) {
+        document.body.classList.add('light-mode');
+        document.body.classList.remove('dark-mode');
+      } else {
+        document.body.classList.add('dark-mode');
+        document.body.classList.remove('light-mode');
+      }
+    }
+
+    // Event listeners
+    inputs.forEach(input => input.addEventListener('change', handleUpdate));
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
+    inputs.forEach(input => input.addEventListener('change', saveSettings));
+    inputs.forEach(input => input.addEventListener('mousemove', saveSettings));
+    resetButton.addEventListener('click', resetInputs);
+    modeToggle.addEventListener('change', toggleMode);
+
+    // Load settings from localStorage
+    window.addEventListener('load', () => {
+      loadSettings();
+      const mode = localStorage.getItem('mode');
+      if (mode === 'light') {
+        modeToggle.checked = true;
+        toggleMode();
+      }
+    });
+    // Save mode to localStorage
+    modeToggle.addEventListener('change', () => {
+      localStorage.setItem('mode', modeToggle.checked ? 'light' : 'dark');
+    });
+  </script>
+</body>
+
+</html>

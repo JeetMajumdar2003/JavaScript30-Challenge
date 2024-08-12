@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flex Panels 💪</title>
+  <link href='https://fonts.googleapis.com/css?family=Amatic+SC' rel='stylesheet' type='text/css'>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+  <style>
+    html {
+      box-sizing: border-box;
+      background: #ffc600;
+      font-family: 'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+
+    .panels {
+      min-height: 100vh;
+      overflow: hidden;
+      /* Code Added */
+      display: flex;
+      flex-direction: row;
+    }
+
+    .panel {
+      background: #6B0F9C;
+      box-shadow: inset 0 0 0 5px rgba(255,255,255,0.1);
+      color: white;
+      text-align: center;
+      align-items: center;
+      /* Safari transitionend event.propertyName === flex */
+      /* Chrome + FF transitionend event.propertyName === flex-grow */
+      /* reason behind the animate open class */
+      transition:
+        font-size 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+        flex 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+        background 0.2s,
+        transform 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11);
+      font-size: 20px;
+      background-size: cover;
+      background-position: center;
+      /* Code Added */
+      flex: 1;  /* it will equally divide the space */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .panel1 { background-image:url(https://picsum.photos/id/237/1500/1500); }
+    .panel2 { background-image:url(https://picsum.photos/seed/picsum/1500/1500); }
+    .panel3 { background-image:url(https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&w=1500&h=1500&fit=crop&s=967e8a713a4e395260793fc8c802901d); }
+    .panel4 { background-image:url(https://picsum.photos/1500/1500.jpg); }
+    .panel5 { background-image:url(https://picsum.photos/1500/1500/?blur=1); }
+
+    /* Flex Children or Items */
+    .panel > * {
+      margin: 0;
+      width: 100%;
+      transition: transform 0.5s;
+      /* Code Added */
+      /* border: red 1px solid; */
+      flex: 1 0 auto; /* it will equally divide the space */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+    }
+
+    .panel > *:first-child {
+      transform: translateY(-100%);
+    }
+    .panel > *:last-child {
+      transform: translateY(100%);
+    }
+
+    .panel.open-active > *:first-child {
+      transform: translateY(0);
+    }
+    .panel.open-active > *:last-child {
+      transform: translateY(0);
+    }
+
+    .panel p {
+      text-transform: uppercase;
+      font-family: 'Amatic SC', cursive;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.72), 0 0 14px rgba(0, 0, 0, 0.45);
+      font-size: 2em;
+    }
+
+    .panel p:nth-child(2) {
+      font-size: 4em;
+    }
+
+    .panel.open {
+      flex: 5;
+      font-size: 40px;
+    }
+
+  </style>
+
+
+  <div class="panels">
+    <div class="panel panel1">
+      <p>Hey</p>
+      <p>Let's</p>
+      <p>Dance</p>
+    </div>
+    <div class="panel panel2">
+      <p>Give</p>
+      <p>Take</p>
+      <p>Receive</p>
+    </div>
+    <div class="panel panel3">
+      <p>Experience</p>
+      <p>It</p>
+      <p>Today</p>
+    </div>
+    <div class="panel panel4">
+      <p>Give</p>
+      <p>All</p>
+      <p>You can</p>
+    </div>
+    <div class="panel panel5">
+      <p>Life</p>
+      <p>In</p>
+      <p>Motion</p>
+    </div>
+  </div>
+
+  <script>
+    // M-1: Here we are adding the open class on click and open-active class on transition end and remove it on second click
+    // const panels = document.querySelectorAll('.panel');
+
+    // // this function will add the open class to the panel on click and remove it on second click
+    // function toggleOpen() {
+    //   this.classList.toggle('open');
+    // }
+
+    // // this function will add the open-active class to the panel on click and remove it on second click
+    // function toggleActive(e) {
+    //   if (e.propertyName.includes('flex')) {
+    //     this.classList.toggle('open-active');
+    //   }
+    // }
+
+    // panels.forEach(panel => panel.addEventListener('click', toggleOpen)); // on click add the open class
+    // panels.forEach(panel => panel.addEventListener('transitionend', toggleActive)); // on transition end add the open-active class
+
+    /*********************************************************************************************************************/
+
+    // M-2: Here we are adding the open class on click and open-active class on transition end but we are removing the open class from other panels although its open
+    const panels = document.querySelectorAll('.panel');
+
+    // this function will add the open class to the panel on click and remove but remove it from other panels and also remove it on second click
+    function toggleOpen() {
+      this.classList.toggle('open');
+      // this will remove the open class from other panels
+      panels.forEach(panel => {
+        if (panel !== this) {
+          panel.classList.remove('open');
+        }
+      });
+    }
+
+    function toggleActive(e) {
+      if (e.propertyName.includes('flex')) {
+        this.classList.toggle('open-active');
+      }
+    }
+
+    panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
+  </script>
+
+
+
+</body>
+</html>
